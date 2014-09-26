@@ -8,13 +8,14 @@ import heapq
 
 class AStar(object):
         
-    def __init__(self, debug=True):
+    def __init__(self, debug=False):
         self.debug = debug
         self.opened = []
         heapq.heapify(self.opened)
         self.closed = set()
         self.nodes = []
         self.gridWidth = None
+        self.gridHeight = None
         self.end = None
         self.start = None
         self.readBoard()            
@@ -23,8 +24,9 @@ class AStar(object):
         board = open('boards/1.txt', 'r')
         lines = board.readlines()
         board.close()
-        x, y = 0, 0
         self.gridWidth = len(lines[0]) - 1
+        self.gridHeight = len(lines) - 1
+        x, y = 0, 0
         for line in lines:
             for char in line.strip():
                 if char == '.':
@@ -44,23 +46,25 @@ class AStar(object):
                 y += 1
             x += 1
             y = 0	     
-        if self.debug:   
-            print("A: " + str(self.getCell(3, 11)))
-            print("B: " + str(self.getCell(3, 17)))
-            print("Start:", str(self.start))
-            print("End:", str(self.end))
-            print("Test:", str(self.getCell(3, 14)))
-            print("Test1", str(self.getCell(2, 14)))
-            print()
-            for node in range(len(self.nodes)):
-                print(node, "", str(self.nodes[node]))
+
+    def getNode(self, x, y):
+        return self.nodes[(x * self.gridWidth) + y]
+
+    def getAdjacentNodes(self, node):
+        nodes = []
+        if node.x < self.gridWidth:
+            nodes.append(self.getNode(node.x + 1, node.y))
+        if node.y > 0:
+            nodes.append(self.getNode(node.x, node.y - 1))
+        if node.x > 0:
+            nodes.append(self.getNode(node.x - 1, node.y))
+        if node.y < self.gridWidth:
+            nodes.append(self.getNode(node.x, node.y + 1))
+        return nodes
 
     @staticmethod
-    def heuristic(self, node):
+    def heuristicMD(self, node):
         return abs(node.x - self.end.x) + abs(node.y - self.end.y)
-
-    def getCell(self, x, y):
-        return self.nodes[(x * self.gridWidth) + y]
 
 class Node(object):
 
