@@ -18,7 +18,10 @@ class AStar(object):
         self.gridHeight = None
         self.end = None
         self.start = None
-        self.readBoard('1-1')            
+        self.readBoard('1-1')   
+        #testNodes = self.getAdjacentNodes(self.start)
+        #for node in testNodes:  
+        #    print(str(node))         
 
     def readBoard(self, board):
         board = open('boards/board-%s.txt' % (board) , 'r')
