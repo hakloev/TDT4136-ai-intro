@@ -26,26 +26,23 @@ class AStar(object):
         board.close()
         self.gridWidth = len(lines[0]) - 1
         self.gridHeight = len(lines) - 1
-        x, y = 0, 0
-        for line in lines:
-            for char in line.strip():
-                if char == '.':
+        for x in range(len(lines)):
+            line = lines[x]
+            for y in range(len(line.strip())):
+                if line[y] == '.':
                     self.nodes.append(Node(x, y, True))
-                elif char == '#':
+                elif line[y] == '#':
                     self.nodes.append(Node(x, y, False))
-                elif char == 'A':
+                elif line[y] == 'A':
                     start = Node(x, y, True)
                     self.nodes.append(start)
                     self.start = start
-                elif char == 'B':
+                elif line[y] == 'B':
                     end = Node(x, y, True)
                     self.nodes.append(end)
                     self.end = end
                 else:
                     print("DEBUG: There are whitespace characters here, why is this?")
-                y += 1
-            x += 1
-            y = 0	     
 
     def getNode(self, x, y):
         return self.nodes[(x * self.gridWidth) + y]
