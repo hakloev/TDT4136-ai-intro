@@ -3,24 +3,31 @@
 
 # We will implement the A*-algorithm with python3
 
-class Astar():
+class AStar(object):
     
     def __init__(self): 
-        print("init astar")
+        self.opened = []
+        heapq.heapify(self.opened)
+        self.closed = set()
+        self.cells = []
+        self.gridHeight, self.gridWidth = self.readBoard()            
 
-class Node():
+    def readBoard(self):
+        return 6, 6
 
-    nodeName = None   
+class Node(object):
 
-    def __init__(self):
-        print("init node")
-        self.nodeName = "node1"
+    def __init__(self, x, y, walkable):
+        self.walkable = walkable
+        self.x = x
+        self.y = y
+        self.parent = None
+        self.f = 0
+        self.g = 0
+        self.h = 0
 
-    def name(self):
-        print(self.nodeName)
-        
+    def printNode(self):
+        print("Node: %s, %s" % (self.x, self.y) 
 
 if __name__ == "__main__":
-    a = Astar()
-    n = Node()
-    n.name()
+    pass
