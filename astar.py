@@ -15,10 +15,13 @@ class AStar(object):
         self.nodes = []
         self.end = None
         self.start = None
-        self.gridHeight, self.gridWidth = self.readBoard()            
+        self.readBoard()            
 
     def readBoard(self):
-        return 6, 6
+        board = open('boards/1.txt', 'r')
+        for line in board:
+            print(line)        
+        board.close()        
 
     def heuristic(self, node):
         return abs(node.x - self.end.x) + abs(node.y - self.end.y)
