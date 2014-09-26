@@ -18,10 +18,10 @@ class AStar(object):
         self.gridHeight = None
         self.end = None
         self.start = None
-        self.readBoard()            
+        self.readBoard('1-1')            
 
-    def readBoard(self):
-        board = open('boards/1.txt', 'r')
+    def readBoard(self, board):
+        board = open('boards/board-%s.txt' % (board) , 'r')
         lines = board.readlines()
         board.close()
         self.gridWidth = len(lines[0]) - 1
