@@ -3,17 +3,24 @@
 
 # We will implement the A*-algorithm with python3
 
+from math import fabs as abs
+
 class AStar(object):
     
     def __init__(self): 
         self.opened = []
         heapq.heapify(self.opened)
         self.closed = set()
-        self.cells = []
+        self.nodes = []
+        self.end = None
+        self.start = None
         self.gridHeight, self.gridWidth = self.readBoard()            
 
     def readBoard(self):
         return 6, 6
+
+    def heuristic(self, node):
+        return abs(node.x - self.end.x) + abs(node.y - self.end.y)
 
 class Node(object):
 
