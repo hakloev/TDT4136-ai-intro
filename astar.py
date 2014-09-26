@@ -4,6 +4,7 @@
 # We will implement the A*-algorithm with python3
 
 from math import fabs as abs
+import heapq
 
 class AStar(object):
     
@@ -34,7 +35,8 @@ class Node(object):
         self.h = 0
 
     def printNode(self):
-        print("Node: %s, %s" % (self.x, self.y) 
+        print("Node: %s, %s" % (self.x, self.y)) 
 
 if __name__ == "__main__":
-    pass
+    a = AStar()
+  
