@@ -31,25 +31,34 @@ class AStar(object):
                 break
             adjNodes = self.getAdjacentNodes(node)
             for adjNode in adjNodes:
-                if adjNode.walkable and adjNode not in self.closed:
-                    if (adjNode.f, adjNode) in self.opened:
-                        if adjNode.g > node.g:
-                            self.updateNode(adjNode, node)
-                    else:
-                        self.updateNode(adjNode, node)
-                        heapq.heappush(self.opened, (adjNode.f, adjNode))
+                if adjNode not in self.closed and (adjNode.f, adjNode) not in self.opened:
+                    self.updateNode(adjNode, node)
+                    heapq.heappush(self.opened, (adjNode.f, adjNode))
+                #elif node.g + adjNode.cost < adjNode.g:
+                #    self.updateNode(adjNode, node)
+                #    print("hit")
+                #    if adjNode in self.closed:
+                #        bullShitmetodeJegIkkeSKjonnerEnDrittAv(adjNode)
+                             
            
     def updateNode(self, adjNode, node):
-        adjNode.g = node.g
+        adjNode.g = node.g + adjNode.cost
         adjNode.h = self.heuristicMD(adjNode)
         adjNode.parent = node
         adjNode.f = adjNode.h + adjNode.g
+    
+    def bullshitMetodeJegIkkeSKjonnerEnDrittAv(node):
+        for kid in node.children:
+            if (node.g + kid.cost) < kid.g:
+                kid.parent = node
+                kid.g = node.g + kid.cost
+                kid.f = kid.h + kid.g
 
     def readBoard(self):
         try:
             board = open('boards/board-%s.txt' % (sys.argv[1]) , 'r')
         except IndexError:
-            board = open('boards/board-1-1.txt', 'r')
+            board = open('boards/board-2-1.txt', 'r')
         lines = board.readlines()
         board.close()
         self.gridWidth = len(lines[0].strip()) 
@@ -59,27 +68,31 @@ class AStar(object):
             listLine = []
             for y in range(len(line.strip())):
                 char = line[y]
-                if char == '.':
-                    listLine.append(Node(char, x, y, True))
-                elif char == '#':
-                    listLine.append(Node(char, x, y, False))
-                elif char == 'A':
-                    startNode = Node(char, x, y, True)
+                if char == 'w':
+                    listLine.append(Node(char, x, y, 100))
+                if char == 'm':
+                    listLine.append(Node(char, x, y, 50))
+                if char == 'f':
+                    listLine.append(Node(char, x, y, 10))
+                if char == 'g':
+                    listLine.append(Node(char, x, y, 5))
+                if char == 'r':
+                    listLine.append(Node(char, x, y, 1))
+                if char == 'A':
+                    startNode = Node(char, x, y, 0)
                     listLine.append(startNode)
                     self.startNode = startNode
-                elif char == 'B':
-                    endNode = Node(char, x, y, True)
+                if char == 'B':
+                    endNode = Node(char, x, y, 0)
                     listLine.append(endNode)
                     self.endNode = endNode
-                else:
-                    print("DEBUG: There are whitespace characters here, why is this?")
             self.nodes.append(listLine)
         
     def displayPath(self):
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
-            node.char = 'o'
+            node.char = '>'
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
@@ -99,6 +112,7 @@ class AStar(object):
             nodes.append(self.getNode(node.x - 1, node.y))
         if node.y < self.gridWidth - 1:
             nodes.append(self.getNode(node.x, node.y + 1))
+        node.children = nodes
         return nodes
     
     def heuristicMD(self, node):
@@ -106,18 +120,19 @@ class AStar(object):
 
 class Node(object):
 
-    def __init__(self, char, x, y, walkable):
+    def __init__(self, char, x, y, cost):
         self.char = char
-        self.walkable = walkable
+        self.cost = cost
         self.x = x
         self.y = y
         self.parent = None
         self.f = 0
         self.g = 0
         self.h = 0
+        self.children = []
 
     def __str__(self):
-        return "Node: %s, %s, %s" % (self.x, self.y, self.walkable)
+        return "Node: %s, %s Cost: %s" % (self.x, self.y, self.cost)
     
     def __lt__(self, other):
         return self.g < other.g
