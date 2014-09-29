@@ -57,15 +57,16 @@ class AStar(object):
         for x in range(len(lines)):
             line = lines[x].strip()
             for y in range(len(line.strip())):
-                if line[y] == '.':
+                char = line[y]
+                if char == '.':
                     self.nodes.append(Node(x, y, True))
-                elif line[y] == '#':
+                elif char == '#':
                     self.nodes.append(Node(x, y, False))
-                elif line[y] == 'A':
+                elif char == 'A':
                     startNode = Node(x, y, True)
                     self.nodes.append(startNode)
                     self.startNode = startNode
-                elif line[y] == 'B':
+                elif char == 'B':
                     endNode = Node(x, y, True)
                     self.nodes.append(endNode)
                     self.endNode = endNode
