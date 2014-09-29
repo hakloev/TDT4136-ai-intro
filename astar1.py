@@ -56,35 +56,38 @@ class AStar(object):
         self.gridHeight = len(lines) 
         for x in range(len(lines)):
             line = lines[x].strip()
+            listLine = []
             for y in range(len(line.strip())):
                 char = line[y]
                 if char == '.':
-                    self.nodes.append(Node(x, y, True))
+                    listLine.append(Node(char, x, y, True))
                 elif char == '#':
-                    self.nodes.append(Node(x, y, False))
+                    listLine.append(Node(char, x, y, False))
                 elif char == 'A':
-                    startNode = Node(x, y, True)
-                    self.nodes.append(startNode)
+                    startNode = Node(char, x, y, True)
+                    listLine.append(startNode)
                     self.startNode = startNode
                 elif char == 'B':
-                    endNode = Node(x, y, True)
-                    self.nodes.append(endNode)
+                    endNode = Node(char, x, y, True)
+                    listLine.append(endNode)
                     self.endNode = endNode
                 else:
                     print("DEBUG: There are whitespace characters here, why is this?")
-
+            self.nodes.append(listLine)
+        
     def displayPath(self):
-        print("See mah path, path fastest in zhe world:\n*-----------*")
         node = self.endNode
-        print("Cell: %d, %d" % (self.endNode.x, self.endNode.y))
         while node.parent is not self.startNode:
             node = node.parent
-            print("Cell: %d, %d" % (node.x, node.y))
-        print("Cell: %d, %d" % (self.startNode.x, self.startNode.y))
-        print("*-----------*")
+            node.char = 'o'
+        for x in range(len(self.nodes)):
+            for y in range(len(self.nodes[x])):
+                print(self.nodes[x][y].char, end='')
+            print()
 
     def getNode(self, x, y):    
-        return self.nodes[(x * self.gridWidth) + y]
+        #return self.nodes[(x * self.gridWidth) + y]
+        return self.nodes[x][y]
 
     def getAdjacentNodes(self, node):
         nodes = []
@@ -103,7 +106,8 @@ class AStar(object):
 
 class Node(object):
 
-    def __init__(self, x, y, walkable):
+    def __init__(self, char, x, y, walkable):
+        self.char = char
         self.walkable = walkable
         self.x = x
         self.y = y
