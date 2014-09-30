@@ -136,7 +136,14 @@ class Node(object):
     def __lt__(self, other):
         return self.f < other.f # Sorting on f(s) (A*-algorithm)
 
+
 def color(color, string):
+    """
+    Simple function for adding color to the path
+    @param color The color code
+    @param string The string to be colorized
+    @returns string A colorized string
+    """
     return "\033[" + str(color) + "m" + string + "\033[0m"
 
 if __name__ == "__main__":

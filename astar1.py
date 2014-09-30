@@ -9,12 +9,10 @@ import heapq, sys
 class AStar(object):
         
     def __init__(self, debug=False):
-
         """
         Initializes the Astar object, which consists of all of the logic for performing a search using the 
         A-star Algorithm
         """
-
         self.debug = debug
         self.opened = []
         heapq.heapify(self.opened)
@@ -82,11 +80,11 @@ class AStar(object):
                 elif char == '#':
                     listLine.append(Node(char, x, y, False))
                 elif char == 'A':
-                    startNode = Node(char, x, y, True)
+                    startNode = Node(color(31, char), x, y, True)
                     listLine.append(startNode)
                     self.startNode = startNode
                 elif char == 'B':
-                    endNode = Node(char, x, y, True)
+                    endNode = Node(color(31, char), x, y, True)
                     listLine.append(endNode)
                     self.endNode = endNode
                 else:
@@ -101,7 +99,7 @@ class AStar(object):
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
-            node.char = 'O'
+            node.char = color(32, 'O')
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
@@ -166,6 +164,15 @@ class Node(object):
     
     def __lt__(self, other):
         return self.f < other.f # Sorting heap-queue on f(s) (A*-algorithm)
+
+def color(color, string):
+    """
+    Simple function for adding color to the path
+    @param color The color code
+    @param string The string to be colorized
+    @returns string A colorized string
+    """
+    return "\033[" + str(color) + "m" + string + "\033[0m"
 
 if __name__ == "__main__":
     a = AStar()

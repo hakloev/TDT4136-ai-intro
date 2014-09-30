@@ -79,11 +79,11 @@ class AStar(object):
                 if char == 'r':
                     listLine.append(Node(char, x, y, 1))
                 if char == 'A':
-                    startNode = Node(char, x, y, 0)
+                    startNode = Node(color(31, char), x, y, 0)
                     listLine.append(startNode)
                     self.startNode = startNode
                 if char == 'B':
-                    endNode = Node(char, x, y, 0)
+                    endNode = Node(color(31, char), x, y, 0)
                     listLine.append(endNode)
                     self.endNode = endNode
             self.nodes.append(listLine)
@@ -92,7 +92,7 @@ class AStar(object):
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
-            node.char = 'O'
+            node.char = color(32, 'O')
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
@@ -136,6 +136,15 @@ class Node(object):
     
     def __lt__(self, other):
         return self.g < other.g # Sorting on g(s) (Dijkstras algorithm)
+
+def color(color, string):
+    """
+    Simple function for adding color to the path
+    @param color The color code
+    @param string The string to be colorized
+    @returns string A colorized string
+    """
+    return "\033[" + str(color) + "m" + string + "\033[0m"
 
 if __name__ == "__main__":
     a = AStar()
