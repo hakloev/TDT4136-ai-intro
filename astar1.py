@@ -38,9 +38,9 @@ class AStar(object):
         The main loop of the algorithm. 
         """
         heapq.heappush(self.opened, (self.startNode.f, self.startNode))
-        while len(self.opened):
+        while len(self.opened): # As long as the opened heap consists of elements
             node = heapq.heappop(self.opened)[1] # Get the node-object with the lowest cost
-            self.closed.add(node) 
+            self.closed.add(node) # Add the current node to closed 
             if node is self.endNode:
                 """
                 The node we're working on is the end node, so we can terminate and display the path
@@ -49,7 +49,7 @@ class AStar(object):
                 break
             adjNodes = self.getAdjacentNodes(node) # Retrieves all the neighbouring nodes
             for adjNode in adjNodes:
-                if adjNode.walkable and adjNode not in self.closed:
+                if adjNode.walkable and adjNode not in self.closed: 
                     if (adjNode.f, adjNode) in self.opened:
                         """
                         If the neighbouring node is in the opened list, we want to see if it's a better path

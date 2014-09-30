@@ -36,9 +36,8 @@ class AStar(object):
                     heapq.heappush(self.opened, (adjNode.f, adjNode))
                 #elif node.g + adjNode.cost < adjNode.g:
                 #    self.updateNode(adjNode, node)
-                #    print("hit")
                 #    if adjNode in self.closed:
-                #        bullShitmetodeJegIkkeSKjonnerEnDrittAv(adjNode)
+                #        self.propegate(adjNode)
                              
            
     def updateNode(self, adjNode, node):
@@ -47,12 +46,12 @@ class AStar(object):
         adjNode.parent = node
         adjNode.f = adjNode.h + adjNode.g
     
-    def bullshitMetodeJegIkkeSKjonnerEnDrittAv(node):
-        for kid in node.children:
-            if (node.g + kid.cost) < kid.g:
-                kid.parent = node
-                kid.g = node.g + kid.cost
-                kid.f = kid.h + kid.g
+    #def propegate(node):
+    #    for child in node.children:
+    #        if (node.g + child.cost) < child.g:
+    #            child.parent = node
+    #            child.g = node.g + child.cost
+    #            child.f = child.h + child.g
 
     def readBoard(self):
         try:
