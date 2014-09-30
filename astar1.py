@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# We will implement the A*-algorithm with python3
+"""
+Authors: Fredrik C. Berg and Håkon Ødegård Løvdal
+
+We wanted to implement the algorithm based on the pseudocode given on it's learning. 
+Due to some difficulties with implementing the agendaLoop we've also gotten some help from other students 
+and the following webpage: http://www.laurentluce.com/posts/solving-mazes-using-python-simple-recursivity-and-a-search/
+
+We're implementing the A*-algorithm with python3.
+"""
 
 from math import fabs as abs
 import heapq, sys
@@ -10,14 +18,14 @@ class AStar(object):
         
     def __init__(self, debug=False):
         """
-        Initializes the Astar object, which consists of all of the logic for performing a search using the 
-        A-star Algorithm
+        Initializes the AStar object, which consists of all of the logic for performing a search using the 
+        A*-algorithm. 
         """
         self.debug = debug
-        self.opened = []
+        self.opened = [] # Min-Heap consisting of opened nodes
         heapq.heapify(self.opened)
-        self.closed = set()
-        self.nodes = []
+        self.closed = set() # Set consisting of closes nodes (implemented as set to ensure no duplicate nodes)
+        self.nodes = [] # The grid as a x*x-matrix of all the node-objects
         self.gridWidth = None
         self.gridHeight = None
         self.startNode = None
@@ -27,19 +35,26 @@ class AStar(object):
 
     def agendaLoop(self):
         """
-        The main loop of the algorithm.
+        The main loop of the algorithm. 
         """
         heapq.heappush(self.opened, (self.startNode.f, self.startNode))
         while len(self.opened):
-            node = heapq.heappop(self.opened)[1]
-            self.closed.add(node)
+            node = heapq.heappop(self.opened)[1] # Get the node-object with the lowest cost
+            self.closed.add(node) 
             if node is self.endNode:
+                """
+                The node we're working on is the end node, so we can terminate and display the path
+                """
                 self.displayPath()
                 break
-            adjNodes = self.getAdjacentNodes(node)
+            adjNodes = self.getAdjacentNodes(node) # Retrieves all the neighbouring nodes
             for adjNode in adjNodes:
                 if adjNode.walkable and adjNode not in self.closed:
                     if (adjNode.f, adjNode) in self.opened:
+                        """
+                        If the neighbouring node is in the opened list, we want to see if it's a better path
+                        than the one we've already found.
+                        """
                         if adjNode.g > node.g:
                             self.updateNode(adjNode, node)
                     else:
@@ -60,7 +75,7 @@ class AStar(object):
     def readBoard(self):
         """
         Reads in a board from a text file, and stores each tile on the board as a node object. The nodes are 
-        stored in a matrix, which is used to represent the board.
+        stored in a matrix, which is used to represent the board. 
         """
         try:
             board = open('boards/board-%s.txt' % (sys.argv[1]) , 'r')
@@ -68,8 +83,8 @@ class AStar(object):
             board = open('boards/board-1-1.txt', 'r')
         lines = board.readlines()
         board.close()
-        self.gridWidth = len(lines[0].strip()) 
-        self.gridHeight = len(lines) 
+        self.gridWidth = len(lines[0].strip()) # Set the width of the grid, strip to ensure no whitespace characters.
+        self.gridHeight = len(lines) # Set the height of the grid
         for x in range(len(lines)):
             line = lines[x].strip()
             listLine = []
@@ -117,11 +132,12 @@ class AStar(object):
     def getAdjacentNodes(self, node):
         """
         Finds and returns the nodes adjacent to a node as a list.
+        The if checks ensure that we dont try to retrive a node outside the grid.
         @returns List. list of nodes
         @param node. Current node being searched
         """
         nodes = []
-        if node.x < self.gridHeight - 1:
+        if node.x < self.gridHeight - 1: 
             nodes.append(self.getNode(node.x + 1, node.y))
         if node.y > 0:
             nodes.append(self.getNode(node.x, node.y - 1))
@@ -133,7 +149,7 @@ class AStar(object):
     
     def heuristicMD(self, node):
         """
-        heuristic function being used. Calculates the manhattan distance between node and end.
+        Heuristic function being used. Calculates the manhattan distance between node and end.
         @param node. The current node being searched
         @returns Integer. The manhattan distance.
         """
@@ -160,9 +176,17 @@ class Node(object):
         self.h = 0
 
     def __str__(self):
+        """
+        toString method for node object. 
+        @returns string A string representing the node
+        """
         return "Node: %s, %s, %s" % (self.x, self.y, self.walkable)
     
     def __lt__(self, other):
+        """
+        Function for making the node objects comparable in the min-heap.
+        @returns boolean Tells if self is less than other node.
+        """
         return self.f < other.f # Sorting heap-queue on f(s) (A*-algorithm)
 
 def color(color, string):
@@ -174,6 +198,9 @@ def color(color, string):
     """
     return "\033[" + str(color) + "m" + string + "\033[0m"
 
+"""
+Main method for initializing the program
+"""
 if __name__ == "__main__":
     a = AStar()
 
