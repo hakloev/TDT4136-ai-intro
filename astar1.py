@@ -79,7 +79,7 @@ class AStar(object):
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
-            node.char = 'o'
+            node.char = 'O'
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
@@ -120,7 +120,7 @@ class Node(object):
         return "Node: %s, %s, %s" % (self.x, self.y, self.walkable)
     
     def __lt__(self, other):
-        return self.g < other.g
+        return self.f < other.f # Sorting heap-queue on f(s) (A*-algorithm)
 
 if __name__ == "__main__":
     a = AStar()

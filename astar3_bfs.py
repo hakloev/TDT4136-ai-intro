@@ -11,6 +11,7 @@ class AStar(object):
     def __init__(self, debug=False):
         self.debug = debug
         self.opened = []
+        heapq.heapify(self.opened)
         self.closed = set()
         self.nodes = []
         self.gridWidth = None
@@ -21,18 +22,18 @@ class AStar(object):
         self.agendaLoop()
 
     def agendaLoop(self):
-        self.opened.append(self.startNode)
+        heapq.heappush(self.opened, (self.startNode.f, self.startNode))
         while len(self.opened):
-            node = self.opened[0]
+            node = heapq.heappop(self.opened)[1]
             self.closed.add(node)
             if node is self.endNode:
                 self.displayPath()
                 break
             adjNodes = self.getAdjacentNodes(node)
             for adjNode in adjNodes:
-                if adjNode not in self.closed and adjNode not in self.opened:
+                if adjNode not in self.closed and (adjNode.f, adjNode) not in self.opened:
                     self.updateNode(adjNode, node)
-                    self.opened.append(adjNode)
+                    heapq.heappush(self.opened, (adjNode.f, adjNode))
                 #elif node.g + adjNode.cost < adjNode.g:
                 #    self.updateNode(adjNode, node)
                 #    print("hit")
@@ -91,7 +92,7 @@ class AStar(object):
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
-            node.char = '>'
+            node.char = 'O'
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
@@ -134,7 +135,8 @@ class Node(object):
         return "Node: %s, %s Cost: %s" % (self.x, self.y, self.cost)
     
     def __lt__(self, other):
-        return self.g < other.g
+        return self.f < other.f # Sorting on f(s) (A*-algorithm)
 
 if __name__ == "__main__":
     a = AStar()
+

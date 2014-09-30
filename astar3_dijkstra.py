@@ -135,7 +135,7 @@ class Node(object):
         return "Node: %s, %s Cost: %s" % (self.x, self.y, self.cost)
     
     def __lt__(self, other):
-        return self.f < other.f # Sorting on f(s) (A*-algorithm)
+        return self.g < other.g # Sorting on g(s) (Dijkstras algorithm)
 
 if __name__ == "__main__":
     a = AStar()
