@@ -11,7 +11,6 @@ class AStar(object):
     def __init__(self, debug=False):
         self.debug = debug
         self.opened = []
-        heapq.heapify(self.opened)
         self.closed = set()
         self.nodes = []
         self.gridWidth = None
@@ -22,23 +21,22 @@ class AStar(object):
         self.agendaLoop()
 
     def agendaLoop(self):
-        heapq.heappush(self.opened, (self.startNode.f, self.startNode))
+        self.opened.append(self.startNode)
         while len(self.opened):
-            node = heapq.heappop(self.opened)[1]
+            node = self.opened.pop(0)
             self.closed.add(node)
             if node is self.endNode:
                 self.displayPath()
                 break
             adjNodes = self.getAdjacentNodes(node)
             for adjNode in adjNodes:
-                if adjNode not in self.closed and (adjNode.f, adjNode) not in self.opened:
+                if (adjNode not in self.closed) and (adjNode not in self.opened):
                     self.updateNode(adjNode, node)
-                    heapq.heappush(self.opened, (adjNode.f, adjNode))
-                #elif node.g + adjNode.cost < adjNode.g:
-                #    self.updateNode(adjNode, node)
-                #    print("hit")
-                #    if adjNode in self.closed:
-                #        bullShitmetodeJegIkkeSKjonnerEnDrittAv(adjNode)
+                    self.opened.append(adjNode)
+                elif node.g + adjNode.cost < adjNode.g:
+                    self.updateNode(adjNode, node)
+                    if adjNode in self.closed:
+                        self.bullshitMetode(adjNode)
                              
            
     def updateNode(self, adjNode, node):
@@ -47,7 +45,7 @@ class AStar(object):
         adjNode.parent = node
         adjNode.f = adjNode.h + adjNode.g
     
-    def bullshitMetodeJegIkkeSKjonnerEnDrittAv(node):
+    def bullshitMetode(self, node):
         for kid in node.children:
             if (node.g + kid.cost) < kid.g:
                 kid.parent = node
@@ -135,7 +133,7 @@ class Node(object):
         return "Node: %s, %s Cost: %s" % (self.x, self.y, self.cost)
     
     def __lt__(self, other):
-        return self.f < other.f # Sorting on f(s) (A*-algorithm)
+        return self.f < other.f # Sorting on f(s) (A*-algorithm, but implemented with FIFO-queue)
 
 if __name__ == "__main__":
     a = AStar()
