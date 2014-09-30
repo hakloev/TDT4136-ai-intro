@@ -89,17 +89,22 @@ class AStar(object):
             self.nodes.append(listLine)
         
     def displayPath(self):
+        for node in self.closed: 
+            node.char = color(34, 'X')
+        for node in self.opened:
+            node[1].char = color(33, '*')
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
             node.char = color(32, 'O')
+        self.startNode.char = color(31, 'A')
+        self.endNode.char = color(31, 'B')
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
             print()
-
+    
     def getNode(self, x, y):    
-        #return self.nodes[(x * self.gridWidth) + y]
         return self.nodes[x][y]
 
     def getAdjacentNodes(self, node):
