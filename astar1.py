@@ -24,7 +24,7 @@ class AStar(object):
         self.debug = debug
         self.opened = [] # Min-Heap consisting of opened nodes
         heapq.heapify(self.opened)
-        self.closed = set() # Set consisting of closes nodes (implemented as set to ensure no duplicate nodes)
+        self.closed = set() # Set consisting of closest nodes (implemented as set to ensure no duplicate nodes)
         self.nodes = [] # The grid as a x*x-matrix of all the node-objects
         self.gridWidth = None
         self.gridHeight = None
