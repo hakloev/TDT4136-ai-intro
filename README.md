@@ -1,6 +1,11 @@
 astar
 =====
 
+## About ##
+
+The two first files, astar1 and astar2 are well-commented, but the two last files are not that well commented. 
+The comments in the two last files are only the spesific differences betwwen theese files and the two first files.
+
 ## How-To ##
 
 The code is implemented with python3, so to run the code you have to use python3.
