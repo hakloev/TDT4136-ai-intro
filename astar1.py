@@ -16,7 +16,7 @@ import heapq, sys
 
 class AStar(object):
         
-    def __init__(self, debug=False):
+    def __init__(self, debug=True):
         """
         Initializes the AStar object, which consists of all of the logic for performing a search using the 
         A*-algorithm. 

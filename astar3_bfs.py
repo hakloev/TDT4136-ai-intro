@@ -11,7 +11,7 @@ import sys
 
 class AStar(object):
         
-    def __init__(self, debug=False):
+    def __init__(self, debug=True):
         self.debug = debug
         self.opened = [] # Queue for opened nodes
         self.closed = set()
@@ -90,7 +90,7 @@ class AStar(object):
             for node in self.closed: 
                 node.char = color(34, 'X')
             for node in self.opened:
-                node[1].char = color(33, '*')
+                node.char = color(33, '*')
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent

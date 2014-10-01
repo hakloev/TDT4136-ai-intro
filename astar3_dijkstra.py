@@ -11,7 +11,7 @@ import heapq, sys
 
 class AStar(object):
         
-    def __init__(self, debug=False):
+    def __init__(self, debug=True):
         self.debug = debug
         self.opened = []
         heapq.heapify(self.opened)
