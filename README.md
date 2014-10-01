@@ -4,7 +4,7 @@ astar
 ## About ##
 
 The two first files, astar1 and astar2 are well-commented, but the two last files are not that well commented. 
-The comments in the two last files are only the spesific differences betwwen theese files and the two first files.
+The comments in the two last files are only the spesific differences between theese files and the two first files.
 
 ## How-To ##
 
