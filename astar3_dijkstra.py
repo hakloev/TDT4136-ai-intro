@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# We will implement the A*-algorithm with python3
+"""
+This code is commented in same way as astar1.py and astar2.py, but there are some differences
+because this code implements BFS. We have commented the differences.  
+"""
 
 from math import fabs as abs
 import heapq, sys

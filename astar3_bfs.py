@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# We will implement the A*-algorithm with python3
+"""
+This code is commented in same way as astar1.py and astar2.py, but there are some differences
+because this code implements BFS. We have commented the differences.  
+"""
 
 from math import fabs as abs
-import heapq, sys
+import sys
 
 class AStar(object):
         
     def __init__(self, debug=False):
         self.debug = debug
-        self.opened = []
+        self.opened = [] # Queue for opened nodes
         self.closed = set()
         self.nodes = []
         self.gridWidth = None
@@ -21,9 +24,9 @@ class AStar(object):
         self.agendaLoop()
 
     def agendaLoop(self):
-        self.opened.append(self.startNode)
+        self.opened.append(self.startNode) # Append node to openened
         while len(self.opened):
-            node = self.opened.pop(0)
+            node = self.opened.pop(0) # Pop the first element (FIFO)
             self.closed.add(node)
             if node is self.endNode:
                 self.displayPath()
@@ -138,7 +141,7 @@ class Node(object):
         return "Node: %s, %s Cost: %s" % (self.x, self.y, self.cost)
     
     def __lt__(self, other):
-        return self.f < other.f # Sorting on f(s) (A*-algorithm, but implemented with FIFO-queue)
+        return self.f < other.f # Sorting on f(s) (A*-algorithm), but implemented with FIFO-queue)
 
 def color(color, string):
     """
