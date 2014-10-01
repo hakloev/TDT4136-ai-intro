@@ -126,10 +126,11 @@ class AStar(object):
         to reconstruct the path from end to beginning.
         Also updates characters in node objects for nodes is closed and opened list.
         """
-        for node in self.closed: 
-            node.char = color(34, 'X')
-        for node in self.opened:
-            node[1].char = color(33, '*')
+        if self.debug:
+            for node in self.closed: 
+                node.char = color(34, 'X')
+            for node in self.opened:
+                node[1].char = color(33, '*')
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent

@@ -111,15 +111,22 @@ class AStar(object):
         Starts from the end node, and traverses through the linked list using the parent attribute. Used 
         to reconstruct the path from end to beginning.
         """
+        if self.debug:
+            for node in self.closed: 
+                node.char = color(34, 'X')
+            for node in self.opened:
+                node[1].char = color(33, '*')
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
             node.char = color(32, 'O')
+        self.startNode.char = color(31, 'A')
+        self.endNode.char = color(31, 'B')
         for x in range(len(self.nodes)):
             for y in range(len(self.nodes[x])):
                 print(self.nodes[x][y].char, end='')
             print()
-
+    
     def getNode(self, x, y):    
         """
         Gets the node at position x, y

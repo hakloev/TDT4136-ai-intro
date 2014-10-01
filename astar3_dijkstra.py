@@ -34,7 +34,7 @@ class AStar(object):
                 break
             adjNodes = self.getAdjacentNodes(node)
             for adjNode in adjNodes:
-                if adjNode not in self.closed and (adjNode.f, adjNode) not in self.opened:
+                if (adjNode.walkable) and (adjNode not in self.closed) and (adjNode.f, adjNode) not in self.opened:
                     self.updateNode(adjNode, node)
                     heapq.heappush(self.opened, (adjNode.f, adjNode))
                 #elif node.g + adjNode.cost < adjNode.g:
@@ -57,6 +57,7 @@ class AStar(object):
                 child.f = child.h + child.g
 
     def readBoard(self):
+        chars = {"w": 100, "m":50, "f":10, "g":5, "r": 1, ".":0, "#":0}
         try:
             board = open('boards/board-%s.txt' % (sys.argv[1]) , 'r')
         except IndexError:
@@ -70,16 +71,11 @@ class AStar(object):
             listLine = []
             for y in range(len(line.strip())):
                 char = line[y]
-                if char == 'w':
-                    listLine.append(Node(char, x, y, 100))
-                if char == 'm':
-                    listLine.append(Node(char, x, y, 50))
-                if char == 'f':
-                    listLine.append(Node(char, x, y, 10))
-                if char == 'g':
-                    listLine.append(Node(char, x, y, 5))
-                if char == 'r':
-                    listLine.append(Node(char, x, y, 1))
+                if char in chars.keys():
+                    if char == "#":
+                        listLine.append(Node(char, x, y, chars[char], False))
+                    else:
+                        listLine.append(Node(char, x, y, chars[char]))
                 if char == 'A':
                     startNode = Node(color(31, char), x, y, 0)
                     listLine.append(startNode)
@@ -91,10 +87,11 @@ class AStar(object):
             self.nodes.append(listLine)
         
     def displayPath(self):
-        for node in self.closed: 
-            node.char = color(34, 'X')
-        for node in self.opened:
-            node[1].char = color(33, '*')
+        if self.debug:
+            for node in self.closed: 
+                node.char = color(34, 'X')
+            for node in self.opened:
+                node[1].char = color(33, '*')
         node = self.endNode
         while node.parent is not self.startNode:
             node = node.parent
@@ -127,9 +124,10 @@ class AStar(object):
 
 class Node(object):
 
-    def __init__(self, char, x, y, cost):
+    def __init__(self, char, x, y, cost, walkable=True):
         self.char = char
         self.cost = cost
+        self.walkable = walkable
         self.x = x
         self.y = y
         self.parent = None
