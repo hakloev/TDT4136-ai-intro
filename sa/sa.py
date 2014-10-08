@@ -1,5 +1,7 @@
+
+import numpy as np
 from math import exp as euler
-from random import randint, shuffle
+from random import randint, shuffle, randrange
 
 class Nodes(object):
 
@@ -25,11 +27,43 @@ class Nodes(object):
 			numberOfWrong += max(0, vertical - self.k) + max(0, horizontal - self.k)
 			vertical = 0
 			horizontal = 0
+
 		#sjekk diagonal, both ways bitches!
-
-
-	def randomNeighbour(self):
-		pass
+		diagonalMatrix = np.array(self.board)
+		diagonals = [diagonalMatrix[::-1,:].diagonal(i) for i in range(-3,4)]
+		diagonals.extend(diagonalMatrix.diagonal(i) for i in range(3,-4,-1))
+		count = 0
+		diagonalMatrix = [n.tolist() for n in diagonals]
+		for diagonal in range(len(diagonalMatrix)):
+			for node in range(len(diagonalMatrix[diagonal])):
+				count += diagonalMatrix[diagonal][node]
+			numberOfWrong += max(0, count - self.k)
+			count = 0
+		print (1 - (1 / (numberOfWrong + 1)))
+		self.genNeighbours()
+		return (1 - (1 / (numberOfWrong + 1)))
+	
+	def genNeighbours(self):
+		#TODO! DIS SHIT CAN LICK MAH BALLS... LIEK REEL HARD
+		toCheck = []
+		cols = []
+		#Finner alle kolonner
+		for i in range (len(self.board)):
+			temp = []
+			for j in range(len(self.board)):
+				temp.append(self.board[j][i])
+			cols.append(temp)
+		#Alle kolonnner der numEggs > k, så legger vi de til en liste
+		for row in cols:
+			if (sum(row) > k):
+				toCheck.append(row)
+		ThaRows = []
+		for row in toCheck:
+			for x in range(len(row)):
+				if row[x] == 1 and self.board[x] not in ThaRows:
+					ThaRows.append(self.board[x])
+		print(ThaRows)
+		return 0
 
 class SA(object):
 
