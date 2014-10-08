@@ -63,6 +63,13 @@ class Nodes(object):
 				if row[x] == 1 and self.board[x] not in ThaRows:
 					ThaRows.append(self.board[x])
 		print(ThaRows)
+
+		for x in range(len(self.board)):
+			if self.board[x] in ThaRows:
+				#Vi har kommet til der de kopierer current board i koken. gogo hakloev, u can do dis.
+				boardcopy = self.board
+
+
 		return 0
 
 class SA(object):
