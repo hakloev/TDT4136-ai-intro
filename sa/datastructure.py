@@ -47,8 +47,8 @@ class Nodes(object):
             count = 0
 
         # This needs to be changed? Temporary solution
-        if number_of_wrong == 4:
-            return 0.01
+        #if number_of_wrong == 4:
+        #    return 0.01
         return (1 / (number_of_wrong + 1))
 
     def generate_neighbours(self):

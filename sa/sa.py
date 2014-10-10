@@ -1,5 +1,5 @@
 from datastructure import *
-import sys
+import sys, time
 
 if len(sys.argv) == 6:
     m = n = int(sys.argv[1])
@@ -38,7 +38,11 @@ class SA(object):
             neighbours = P.generate_neighbours()
             Pmax = P.get_best_neighbour(neighbours) # highest neighbour
             q = ((P.obj_func(Pmax) - P.obj_func(P.board)) / P.obj_func(P.board)) # sick function
-            p = min(1, euler(-q / T)) # sicker function
+            try:
+                p = min(1, euler(-q / T)) # sicker function
+            except OverflowError:
+                print("I'm outa my loop")
+                break
             x = randint(0, 1)
             if x > p:
                 P.board = Pmax
