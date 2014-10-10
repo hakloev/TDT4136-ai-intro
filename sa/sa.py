@@ -67,16 +67,14 @@ class Nodes(object):
                 temp.append(self.board[j][i])
             cols.append(temp)
         # All columns with number_of_eggs > k, appended to a list
-        for row in cols:
-            if (sum(row) > self.k):
-                to_check.append(row)
+        to_check = [row for row in cols if sum(row) > self.k ]
         # Finding all rows that has an egg in a column > k eggs, and adds it to rows.
         rows = []
         for row in to_check:
             for x in range(len(row)):
                 if row[x] == 1 and self.board[x] not in rows:
                     rows.append(self.board[x])
-
+        
         neighbours = []
         for x in range(len(self.board)):
             if self.board[x] in rows:
@@ -102,7 +100,7 @@ class Nodes(object):
 
     def get_best_neighbour(self, neighbours):
         '''
-        Returns the best neighbour in the neighbours list
+        Returns the best neighbour in the neighbours list using lambda (anonymous function)
         '''
         return max(neighbours, key=lambda x: [x for x in neighbours])
 
