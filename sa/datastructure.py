@@ -4,7 +4,7 @@ from random import randint, shuffle, randrange
 
 class Nodes(object):
     '''
-    Datastructure holding board as matrix, and has all helper functions for modifying and checking board
+    Class for representing of board. The class holds the board as matrix, and has all helper functions for modifying and checking board
     '''
     def __init__(self, board, k):
         self.board = board
@@ -46,7 +46,7 @@ class Nodes(object):
             number_of_wrong += max(0, count - self.k)
             count = 0
 
-        # This needs to be changed? Temporary solution
+        # This can be deleted, temporary hack while testing.
         #if number_of_wrong == 4:
         #    return 0.01
         return (1 / (number_of_wrong + 1))

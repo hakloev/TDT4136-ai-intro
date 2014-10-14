@@ -35,20 +35,20 @@ class SA(object):
         '''
         T = Tmax
         while P.obj_func(P.board) < Ftarget and T > 0:
-            neighbours = P.generate_neighbours()
-            Pmax = P.get_best_neighbour(neighbours) # highest neighbour
+            neighbours = P.generate_neighbours() # Generates a set of neighbours based on the current state
+            Pmax = P.get_best_neighbour(neighbours) # Get the neighbour with the highest result from the object function
             q = ((P.obj_func(Pmax) - P.obj_func(P.board)) / P.obj_func(P.board)) # sick function
             try:
-                p = min(1, euler(-q / T)) # sicker function
+                p = min(1, euler(-q / T)) 
             except OverflowError:
-                print("I'm outa my loop")
+                print("OverflowError in euler function")
                 break
             x = randint(0, 1)
             if x > p:
                 P.board = Pmax
             else:
-                P.board = neighbours[randint(0, len(neighbours) - 1)] # random neighbour
-            T -= decT # decreasing temperature 
+                P.board = neighbours[randint(0, len(neighbours) - 1)] # Select a random neighbour
+            T -= decT # Decrease the temperature 
         print('Completed with the following values:\n' + \
                 'object_value: %3.2f\n' % (P.obj_func(P.board)) + \
                 'T: %s\n' % (T) + \
@@ -66,7 +66,7 @@ def create_board(m, n, k):
     row = [1 if x < k else 0 for x in range(m)]
     for y in range(m):
         temp = list(row)
-        shuffle(temp)
+        shuffle(temp) # Shuffling to create a random board
         board.append(temp) 
     return board
 
