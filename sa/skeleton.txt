@@ -1,0 +1,37 @@
+class Nodes(object):
+    
+    def obj_func(self, board):
+        '''
+        A function that describing how good an input state is, compared to the correct state. 
+        '''
+
+    def generate_neighbours(self):
+        '''
+        Function that generates a set of neighbours (different boards) based on the current board state. 
+        '''
+
+
+    def get_best_neighbour(self, neighbours):
+        '''
+        Returns the best neighbour in the neighbours list.
+        '''
+
+class SA(object):      
+    
+    def main_loop(self, P, Tmax, Ftarget, decT):
+        '''
+        Skeleton for the main loop.
+        '''
+        T = Tmax
+        while P.obj_func(P.board) < Ftarget and T > 0:
+            neighbours = P.generate_neighbours()
+            Pmax = P.get_best_neighbour(neighbours) # highest neighbour
+            q = ((P.obj_func(Pmax) - P.obj_func(P.board)) / P.obj_func(P.board)) # sick function
+            p = min(1, euler(-q / T)) # sicker function
+            x = randint(0, 1)
+            if x > p:
+                P.board = Pmax
+            else:
+                P.board = neighbours[randint(0, len(neighbours) - 1)] # random neighbour
+            T -= decT # decreasing temperature 
+        return P
