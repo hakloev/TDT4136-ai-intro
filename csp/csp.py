@@ -15,6 +15,9 @@ class CSP:
         # the variable pair (i, j)
         self.constraints = {}
 
+        #self.backtrack_count is a number counting the amount of times backtrack was run
+        self.backtrack_count = 0
+
     def add_variable(self, name, domain):
         """Add a new variable to the CSP. 'name' is the variable name
         and 'domain' is a list of the legal values for the variable.
@@ -109,14 +112,23 @@ class CSP:
         assignments and inferences that took place in previous
         iterations of the loop.
         """
+        self.backtrack_count += 1
+
         #for key in assignment.keys():
         #    print str(key) + " " + str(assignment[key])
         solved = filter(lambda x: len(x) != 1, assignment.values())
-        return assignment if not len(solved) else None
+        if not len(solved): return assignment
         
-        
+        var = self.select_unassigned_variable(assignment)
 
-        #return assignment #should be failure
+        for value in assignment[var]:
+            copied_assignment = copy.deepcopy(assignment)
+            copied_assignment[var] = value
+            if self.inference(copied_assignment, self.get_all_arcs()):
+                result = self.backtrack(copied_assignment)
+                if result: return result
+        return None # No solution found
+
 
     def select_unassigned_variable(self, assignment):
         """The function 'Select-Unassigned-Variable' from the pseudocode
@@ -124,8 +136,12 @@ class CSP:
         in 'assignment' that have not yet been decided, i.e. whose list
         of legal values has a length greater than one.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        # We use minimum-remaining-value heuristic (MRV)
+        var = min(filter(lambda x: len(x) > 1, assignment.values()), key=lambda y: len(y))
+        #print "var: " + str(var)
+        for key, value in assignment.items():
+            if value == var:
+                return key
 
     def inference(self, assignment, queue):
         """The function 'AC-3' from the pseudocode in the textbook.
@@ -236,5 +252,6 @@ if __name__ == "__main__":
     csp_sudoku = create_sudoku_csp('boards/easy.txt')
     solution = csp_sudoku.backtracking_search()
     print_sudoku_solution(solution)
+    print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count)
     #csp_map = create_map_coloring_csp()
     #csp_map.backtracking_search()
