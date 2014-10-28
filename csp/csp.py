@@ -248,7 +248,7 @@ def print_sudoku_solution(solution):
             print '------+-------+------'
 
 if __name__ == "__main__":
-    csp_sudoku = create_sudoku_csp('boards/veryhard.txt')
+    csp_sudoku = create_sudoku_csp('boards/derp.txt')
     solution = csp_sudoku.backtracking_search()
     print_sudoku_solution(solution)
     print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count)
