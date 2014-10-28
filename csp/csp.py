@@ -112,21 +112,22 @@ class CSP:
         assignments and inferences that took place in previous
         iterations of the loop.
         """
-        self.backtrack_count += 1
+        self.backtrack_count += 1 # Increasing backtrack counter by one
 
         #for key in assignment.keys():
         #    print str(key) + " " + str(assignment[key])
-        solved = filter(lambda x: len(x) != 1, assignment.values())
-        if not len(solved): return assignment
-        
-        var = self.select_unassigned_variable(assignment)
 
-        for value in assignment[var]:
-            copied_assignment = copy.deepcopy(assignment)
-            copied_assignment[var] = value
-            if self.inference(copied_assignment, self.get_all_arcs()):
-                result = self.backtrack(copied_assignment)
-                if result: return result
+        unsolved = filter(lambda x: len(x) != 1, assignment.values()) # Returns a list of all unsolved variables
+        if not len(unsolved): return assignment # If the length of unsolved is 0, return the current state as a soulution
+        
+        var = self.select_unassigned_variable(assignment) # Get the variable with the smallest domain
+
+        for value in assignment[var]: # For each value in the domain of the var variable
+            copied_assignment = copy.deepcopy(assignment) # Create a deepcopy to avoid interference between iterations
+            copied_assignment[var] = value # Set the var variable domain to a single value
+            if self.inference(copied_assignment, self.get_all_arcs()): # If the inference method returns True
+                result = self.backtrack(copied_assignment) # Do a new search with the copied domain (assignment)
+                if result: return result # If result ain't None, return the result (correct solution)
         return None # No solution found
 
 
@@ -136,12 +137,12 @@ class CSP:
         in 'assignment' that have not yet been decided, i.e. whose list
         of legal values has a length greater than one.
         """
-        # We use minimum-remaining-value heuristic (MRV)
-        var = min(filter(lambda x: len(x) > 1, assignment.values()), key=lambda y: len(y))
+        # We use the minimum-remaining-value heuristic (MRV)
+        var = min(filter(lambda x: len(x) > 1, assignment.values()), key=lambda y: len(y)) # Returns the list with fewest elements
         #print "var: " + str(var)
         for key, value in assignment.items():
             if value == var:
-                return key
+                return key # Return the key for the list
 
     def inference(self, assignment, queue):
         """The function 'AC-3' from the pseudocode in the textbook.
@@ -150,19 +151,18 @@ class CSP:
         is the initial queue of arcs that should be visited.
         """
         while len(queue):
-            Xi, Xj = queue.pop(0)
+            Xi, Xj = queue.pop(0) # Get the first variable in from the queue of arcs
             #print "Xi: %s Xj: %s" % (Xi, Xj)
-            if self.revise(assignment, Xi, Xj):
-                if not len(assignment[Xi]):
-                    #print "Inference returned False"
+            if self.revise(assignment, Xi, Xj): # Check the constraints between Xi and Xj
+                if not len(assignment[Xi]): # If Xi has no valid domains 
                     return False
-                for Xk, var in self.get_all_neighboring_arcs(Xi): # minus Xj
+                for Xk, var in self.get_all_neighboring_arcs(Xi): 
                     #print "Xk: %s var: %s" % (Xk, var)
                     #print '%s + %s' % (Xk, Xi)
-                    if (Xk != Xi) and (Xk != Xj):
+                    if (Xk != Xi) and (Xk != Xj): # Removing Xi and Xj from the neighbouring arcs
                         #print "Appended (%s, %s) to queue" % (Xk, Xi)
                         queue.append((Xk, Xi))
-        return True
+        return True 
 
 
     def revise(self, assignment, i, j):
@@ -174,18 +174,17 @@ class CSP:
         between i and j, the value should be deleted from i's list of
         legal values in 'assignment'.
         """
-        revised = False
         #print "Domain of i: " + str(assignment[i])
         #print "Domain of j: " + str(assignment[j])
-        fs = frozenset(self.constraints[i][j])
+        revised = False
+        constraint_set = frozenset(self.constraints[i][j]) 
         for x in assignment[i]:
-            constraints = [(x, y) for y in assignment[j] if x != y]
+            constraints = [(x, y) for y in assignment[j] if x != y] # Generate all valid (x, y) constraints 
             #print "Constraints for x=" + str(x) + " " + str(constraints)
             #print "Self.Constraints: " + str(self.constraints[i][j])
-            fs1 = frozenset(constraints)
-            s1 = fs1.intersection(fs)
-            if len(s1) == 0:
-                assignment[i].remove(x)
+            satisfy_set = frozenset(constraints).intersection(constraint_set) # Set containing satisfying constraints
+            if not len(satisfy_set): # If length of satisfy_set is 0, there are no value y satisfying the constraint between Xi and Xj
+                assignment[i].remove(x) # Removing x from the domain of Xi
                 revised = True
         return revised
 
@@ -249,7 +248,7 @@ def print_sudoku_solution(solution):
             print '------+-------+------'
 
 if __name__ == "__main__":
-    csp_sudoku = create_sudoku_csp('boards/easy.txt')
+    csp_sudoku = create_sudoku_csp('boards/veryhard.txt')
     solution = csp_sudoku.backtracking_search()
     print_sudoku_solution(solution)
     print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count)
