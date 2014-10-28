@@ -109,8 +109,14 @@ class CSP:
         assignments and inferences that took place in previous
         iterations of the loop.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        #for key in assignment.keys():
+        #    print str(key) + " " + str(assignment[key])
+        solved = filter(lambda x: len(x) != 1, assignment.values())
+        return assignment if not len(solved) else None
+        
+        
+
+        #return assignment #should be failure
 
     def select_unassigned_variable(self, assignment):
         """The function 'Select-Unassigned-Variable' from the pseudocode
@@ -127,8 +133,21 @@ class CSP:
         the lists of legal values for each undecided variable. 'queue'
         is the initial queue of arcs that should be visited.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        while len(queue):
+            Xi, Xj = queue.pop(0)
+            #print "Xi: %s Xj: %s" % (Xi, Xj)
+            if self.revise(assignment, Xi, Xj):
+                if not len(assignment[Xi]):
+                    #print "Inference returned False"
+                    return False
+                for Xk, var in self.get_all_neighboring_arcs(Xi): # minus Xj
+                    #print "Xk: %s var: %s" % (Xk, var)
+                    #print '%s + %s' % (Xk, Xi)
+                    if (Xk != Xi) and (Xk != Xj):
+                        #print "Appended (%s, %s) to queue" % (Xk, Xi)
+                        queue.append((Xk, Xi))
+        return True
+
 
     def revise(self, assignment, i, j):
         """The function 'Revise' from the pseudocode in the textbook.
@@ -139,8 +158,20 @@ class CSP:
         between i and j, the value should be deleted from i's list of
         legal values in 'assignment'.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        revised = False
+        #print "Domain of i: " + str(assignment[i])
+        #print "Domain of j: " + str(assignment[j])
+        fs = frozenset(self.constraints[i][j])
+        for x in assignment[i]:
+            constraints = [(x, y) for y in assignment[j] if x != y]
+            #print "Constraints for x=" + str(x) + " " + str(constraints)
+            #print "Self.Constraints: " + str(self.constraints[i][j])
+            fs1 = frozenset(constraints)
+            s1 = fs1.intersection(fs)
+            if len(s1) == 0:
+                assignment[i].remove(x)
+                revised = True
+        return revised
 
 def create_map_coloring_csp():
     """Instantiate a CSP representing the map coloring problem from the
@@ -200,3 +231,10 @@ def print_sudoku_solution(solution):
         print
         if row == 2 or row == 5:
             print '------+-------+------'
+
+if __name__ == "__main__":
+    csp_sudoku = create_sudoku_csp('boards/easy.txt')
+    solution = csp_sudoku.backtracking_search()
+    print_sudoku_solution(solution)
+    #csp_map = create_map_coloring_csp()
+    #csp_map.backtracking_search()
