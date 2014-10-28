@@ -18,6 +18,9 @@ class CSP:
         #self.backtrack_count is a number counting the amount of times backtrack was run
         self.backtrack_count = 0
 
+        #self.backtrack_fail_count is a number counting the amount of times backtrack failed
+        self.backtrack_fail_count = 0
+
     def add_variable(self, name, domain):
         """Add a new variable to the CSP. 'name' is the variable name
         and 'domain' is a list of the legal values for the variable.
@@ -128,6 +131,7 @@ class CSP:
             if self.inference(copied_assignment, self.get_all_arcs()): # If the inference method returns True
                 result = self.backtrack(copied_assignment) # Do a new search with the copied domain (assignment)
                 if result: return result # If result ain't None, return the result (correct solution)
+        self.backtrack_fail_count += 1
         return None # No solution found
 
 
@@ -248,9 +252,10 @@ def print_sudoku_solution(solution):
             print '------+-------+------'
 
 if __name__ == "__main__":
-    csp_sudoku = create_sudoku_csp('boards/derp.txt')
+    csp_sudoku = create_sudoku_csp('boards/veryhard.txt')
     solution = csp_sudoku.backtracking_search()
     print_sudoku_solution(solution)
-    print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count)
+    print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count) + \
+          "self.backtrack() failed %d times.\n" % (csp_sudoku.backtrack_fail_count)
     #csp_map = create_map_coloring_csp()
     #csp_map.backtracking_search()
