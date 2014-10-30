@@ -144,9 +144,7 @@ class CSP:
         # We use the minimum-remaining-value heuristic (MRV)
         var = min(filter(lambda x: len(x) > 1, assignment.values()), key=lambda y: len(y)) # Returns the list with fewest elements
         #print "var: " + str(var)
-        for key, value in assignment.items():
-            if value == var:
-                return key # Return the key for the list
+        return [k for k, v in assignment.items() if v == var][0] # Return the key for the list
 
     def inference(self, assignment, queue):
         """The function 'AC-3' from the pseudocode in the textbook.
@@ -158,7 +156,7 @@ class CSP:
             Xi, Xj = queue.pop(0) # Get the first variable in from the queue of arcs
             #print "Xi: %s Xj: %s" % (Xi, Xj)
             if self.revise(assignment, Xi, Xj): # Check the constraints between Xi and Xj
-                if not len(assignment[Xi]): # If Xi has no valid domains 
+                if not len(assignment[Xi]): # If Xi has no legal values in the domain 
                     return False
                 for Xk, var in self.get_all_neighboring_arcs(Xi): 
                     #print "Xk: %s var: %s" % (Xk, var)
@@ -252,7 +250,7 @@ def print_sudoku_solution(solution):
             print '------+-------+------'
 
 if __name__ == "__main__":
-    csp_sudoku = create_sudoku_csp('boards/veryhard.txt')
+    csp_sudoku = create_sudoku_csp('boards/evil.txt')
     solution = csp_sudoku.backtracking_search()
     print_sudoku_solution(solution)
     print "\nself.backtrack() was called %d times.\n" % (csp_sudoku.backtrack_count) + \
